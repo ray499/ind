@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator - Gen Chem 161</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3e7;
+            color: #2d7b2d;
+            border: 1px solid #d4e6d4;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grade Calculator</h1>
+        <p>Enter averages in this order: Midterm Average, E-Learning, Recitation</p>
+        <form id="gradeForm">
+            <label for="midterm">Midterm Average:</label>
+            <input type="number" id="midterm" step="0.01" required>
+
+            <label for="eLearning">E-Learning Average:</label>
+            <input type="number" id="eLearning" step="0.01" required>
+
+            <label for="recitation">Recitation Average:</label>
+            <input type="number" id="recitation" step="0.01" required>
+
+            <button type="button" onclick="calculateGrade()">Calculate Current Grade</button>
+        </form>
+
+        <form id="finalGradeForm">
+            <label for="desiredGrade">Desired Class Grade:</label>
+            <input type="number" id="desiredGrade" step="0.01" required>
+
+            <button type="button" onclick="calculateFinalGrade()">Calculate Final Exam Score</button>
+        </form>
+
+        <div id="result" class="result" style="display: none;"></div>
+        <div id="finalResult" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        function calculateGrade() {
+            const midterm = parseFloat(document.getElementById('midterm').value);
+            const eLearning = parseFloat(document.getElementById('eLearning').value);
+            const recitation = parseFloat(document.getElementById('recitation').value);
+
+            let midtermGrade = 0.42 * midterm;
+            let eLearningGrade = 0;
+
+            if (eLearning > midterm + 30) {
+                eLearningGrade = (midterm + 30) * 0.2;
+            } else {
+                eLearningGrade = eLearning * 0.2;
+            }
+
+            let recitationGrade = 0.05 * recitation;
+            let currentGrade = midtermGrade + eLearningGrade + recitationGrade + 5;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `Your current grade without the final is: <strong>${currentGrade.toFixed(2)}</strong>. It is assumed that full points are given for surveys. This grade does not include the final, which accounts for another 28%.<br><br>
+            To calculate what you need on the final to achieve a certain score, use the equation:<br>
+            <strong>current grade + 0.28 * x = desired class grade</strong>`;
+        }
+
+        function calculateFinalGrade() {
+            const midterm = parseFloat(document.getElementById('midterm').value);
+            const eLearning = parseFloat(document.getElementById('eLearning').value);
+            const recitation = parseFloat(document.getElementById('recitation').value);
+            const desiredGrade = parseFloat(document.getElementById('desiredGrade').value);
+
+            let midtermGrade = 0.42 * midterm;
+            let eLearningGrade = 0;
+
+            if (eLearning > midterm + 30) {
+                eLearningGrade = (midterm + 30) * 0.2;
+            } else {
+                eLearningGrade = eLearning * 0.2;
+            }
+
+            let recitationGrade = 0.05 * recitation;
+            let currentGrade = midtermGrade + eLearningGrade + recitationGrade + 5;
+
+            let neededFinal = (desiredGrade - currentGrade) / 0.28;
+
+            const finalResultDiv = document.getElementById('finalResult');
+            finalResultDiv.style.display = 'block';
+            finalResultDiv.innerHTML = `To achieve a class grade of <strong>${desiredGrade.toFixed(2)}</strong>, you need to score <strong>${neededFinal.toFixed(2)}</strong> on the final exam.`;
+        }
+    </script>
+</body>
+</html>
